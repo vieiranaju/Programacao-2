@@ -44,28 +44,12 @@ public class PrimaryController {
             cidadeField.setText(endereco.getCidade());
             estadoField.setText(endereco.getEstado());
         } catch (IllegalArgumentException e) {
-            mostrarMensagemErro("Formato de CEP inválido.");
+            mostrarAlerta(AlertType.WARNING, "Aviso", "Formato de CEP inválido.");
         } catch (IOException e) {
-            mostrarMensagemErro("Erro ao buscar o CEP: " + e.getMessage());
+            mostrarAlerta(AlertType.ERROR, "Erro", "Erro ao buscar o CEP: " + e.getMessage());
         } catch (Exception e) {
-            mostrarMensagemErro("Erro desconhecido: " + e.getMessage());
+            mostrarAlerta(AlertType.ERROR, "Erro", "Erro desconhecido: " + e.getMessage());
         }
-    }
-    
-     private void mostrarMensagemErro(String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Aviso");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     @FXML
@@ -86,14 +70,26 @@ public class PrimaryController {
         cliente.setTelefone(telefoneField.getText());
         cliente.setEndereco(new Endereco(cepField.getText(), ruaField.getText(), numeroField.getText(), cidadeField.getText(), estadoField.getText()));
         clientesList.add(cliente);
-        mensagemConfirmacao("Cliente cadastrado com sucesso!");
+        mostrarAlerta(AlertType.CONFIRMATION, "Confirmação", "Cliente cadastrado com sucesso!");
+       
+        mostrarClientes(cliente);
     }
-    
-    private void mensagemConfirmacao(String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(null);
+
+    private void mostrarAlerta(AlertType tipo, String titulo, String mensagem) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    private void mostrarClientes(Cliente cliente) {
+        System.out.println("Cliente cadastrado:");
+        System.out.println("Nome: " + cliente.getNome() + 
+                           ", Telefone: " + cliente.getTelefone() + 
+                           ", Endereco: " + cliente.getEndereco().getRua() + 
+                           ", Numero: " + cliente.getEndereco().getNumero() +
+                           ", Cidade: " + cliente.getEndereco().getCidade() + 
+                           ", Estado: " + cliente.getEndereco().getEstado());
     }
 }
